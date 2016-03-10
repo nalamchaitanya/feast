@@ -1,5 +1,5 @@
-function ff = fiestF(right,key)
-    eright = exp(right);
+function out = fiestF(right,key)
+    eright = Exp(right);
     keymix = xor(eright,key);
     sbst = zeros(1,16);
     sbst([1:4])   = s1(keymix([1:6]));
