@@ -13,9 +13,9 @@ function a = rounds(rnds)
     end
     csvwrite('freq.csv',freq);
     hold on;
-    scatter([1:32]',freq);
+    scatter([1:32]',freq/sum(freq));
     nck = arrayfun(@(x)nchoosek(32,x),[1:32]','UniformOutput',false);
     nck = cell2mat(nck);
-    plot([1:32]',nck);
+    plot([1:32]',nck/sum(nck));
     saveas(gcf,'freq.png');
 end
