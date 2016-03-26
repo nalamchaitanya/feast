@@ -7,19 +7,17 @@
 #include <math.h>
 
 // All #defines here.(rounds,keysize,etc.)
-#define ROUNDS 6;
+#define NO_OF_ROUNDS 6
+#define KEY_SIZE     24
+#define INPUT_SIZE   32
 
 // Task 1: Create the substitution box as an array i.e if you give s1[64] it
 // must give the substitution of it. Fill array with appropritate values. Use
 // s1.m function in matlab to get elements in the order s1[0],s1[1]...
-
-int s1[64] = {0,0,0};
-
-// This is the expansion array which is in the exp.csv
-int exp[24] = {0,0,0};
-
-// This is the permutation array which is in the diffu.csv
-int dif[24] = {0,0,0};
+int *keys_arr;
+int **sbox_arr;
+int *expansion_arr;
+int *diffusion_arr;
 
 // This is permutation choice 1 for the key generation.
 int pc1left[2][7] = {{25,17,9,1,26,18,10},{2,27,19,11,3,12,28}};
@@ -48,5 +46,10 @@ int onehot(int index);
 
 // This prints the int in form of bits.
 void printbits(int num);
+
+
+void fileread();
+void fiestel(int input);
+int function(int input,int round_no);
 
 #endif
