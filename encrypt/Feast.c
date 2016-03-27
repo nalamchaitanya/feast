@@ -15,7 +15,7 @@ int main(int argc,char **argv)
     }
 
 
-    int i,j,flag;
+    int i,j,flag,output,temp1;
 	char temp;	
 
 	FILE *fileptr;
@@ -25,30 +25,35 @@ int main(int argc,char **argv)
 
 	FILE *filewrite;
 	filewrite = fopen(argv[2],"w");
-
+	flag = 0;
 	while(1)
 	{
 		for(i=0;i<4;i++)
 		{
 			c = fgetc(fileptr);
+
 			if(c == EOF)
 			{
 				flag = 1;
 				break;
 			}
+//			printf("%c\n",c);
+			temp1 = (int)c << (24-8*i);
+			input = input + temp1;
 		}
 		if(flag == 1 && i == 0)
 			break;
 		else if (flag == 1)
 		{
-			fiestel(input);
-			printf("%x",input);
+			output = fiestel(input);
+			printf("%x\n",output);
 			break;
 		}
 		else
 		{
-			fiestel(input);
-			printf("%x",input );
+//			printf("%x\n",input);
+			output = fiestel(input);
+			printf("%x\n",output );
 		}
 
 	}
