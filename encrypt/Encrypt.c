@@ -13,19 +13,21 @@ int onehot(int index)
 }
 
 // This prints the int in form of bits.
-void printbits(int num)
+void printbits(unsigned int num)
 {
     int i;
-    i = 31;
-    int p = (int)pow(2,31);
-    printf("<--");
+    printf("<");
+    i=31;
+    unsigned int p = (unsigned int)pow(2,31);
     while(i>=0)
     {
+        if(i==23||i==15||i==7)
+            printf(">|<");
         printf("%d",num/p);
         num = num<<1;
         i--;
     }
-    printf("-->\n");
+    printf(">\n");
 }
 
 
@@ -73,15 +75,62 @@ int function(int input,int round_no)
     {
         temp = 0X0000003F;
         temp1 = xored_input && temp;
-        sbox_input += sbox_arr[temp1] * onehot(8*i);
-        xored_input >> 8;
+        sbox_input += (sbox_arr[temp1] << (4*i));
+        xored_input >> 6;
     }
 
     int diffused_input = 0;
-    for(i=0;i<24;i++)
+    for(i=0;i<16;i++)
     {
-        temp = input && onehot(15 - expansion_arr[i]);
+        temp = sbox_input && onehot(15 - diffusion_arr[i]);
         if(temp!=0)
             diffused_input += onehot(15-i);
     }
+}
+
+// This is expand function which expands 16 bit to 24 bit.
+int subst(int sub_in)
+{
+    int sub_out = 0;
+    int temp = 0x0000003F;
+    int temp1,i;
+    for(i=0;i<4;i++)
+    {
+        temp1 = sub_in && temp;
+        sub_out += (sbox_arr[temp1] << (4*i));
+        sub_in >> 6;
+    }
+    return sub_out;
+}
+
+// This is for substitution of 24 bit to 16 bit.
+int expand(int exp_in)
+{
+    int exp_out = 0;
+    int temp,i;
+
+    for(i=0;i<24;i++)
+    {
+        temp = exp_in && onehot(15 - expansion_arr[i]);
+        if(temp!=0)
+            exp_out += onehot(23-i);
+    }
+    return exp_out;
+}
+
+// This is for permutation after substitution. rearrange bits to get a short int
+int perm(int perm_in)
+{
+    int perm_out;
+    int i,temp;
+    perm_out = 0;
+    
+    for(i=0;i<16;i++)
+    {
+        temp = perm_in && onehot(15 - diffusion_arr[i]);
+        if(temp!=0)
+            perm_out += onehot(15-i);
+    }
+
+    return perm_out;
 }
