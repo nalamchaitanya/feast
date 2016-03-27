@@ -18,18 +18,19 @@ int main(int argc,char **argv)
     int i,j,flag;
 	char temp;	
 
-	global_variables();
-
 	FILE *fileptr;
 	fileptr = fopen(argv[1],"r");
-	keygen();
-	char c[4];
+	char c;
 	int input = 0;
+
+	FILE *filewrite;
+	filewrite = fopen(argv[2],"w");
+
 	while(1)
 	{
 		for(i=0;i<4;i++)
 		{
-			char c = fgetc(fileptr);
+			c = fgetc(fileptr);
 			if(c == EOF)
 			{
 				flag = 1;
@@ -41,10 +42,14 @@ int main(int argc,char **argv)
 		else if (flag == 1)
 		{
 			fiestel(input);
+			printf("%x",input);
 			break;
 		}
 		else
+		{
 			fiestel(input);
+			printf("%x",input );
+		}
 
 	}
     // Take 4 bytes at a time and convert to int and apply the encryption and
