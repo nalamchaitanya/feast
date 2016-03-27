@@ -1,7 +1,6 @@
 #include "Encrypt.h"
 
 // Implement all the functions here.
-int keys_arr[NO_OF_ROUNDS] = {1,2,3,4,5,6};
 int expansion_arr[24] = {15,9,13,10,4,12,6,7,6,16,15,14,8,7,5,11,1,2,5,13,1,9,4,3};;
 int diffusion_arr[16] = {2,8,11,13,3,5,10,16,4,6,9,15,1,7,12,14};
 int sbox_arr[64]      = {14,0,4,15,13,7,1,4,2,14,15,2,11,13,8,1,3,10,10,6,6,12,12,11,5,9,9,5,0,3,7,8,4,15,1,12,14,8,8,2,13,4,6,9,2,1,11,7,15,5,12,11,9,3,7,14,3,10,10,0,5,6,0,13};
@@ -38,10 +37,10 @@ int fiestel(int input)
     int out_left,out_right,output;
 
     temp = 0xFFFF0000;
-    left = input && temp;
+    left = input & temp;
 
     temp = 0x0000FFFF;
-    right = input && temp;
+    right = input & temp;
 
     for(i=0;i<NO_OF_ROUNDS;i++)
     {
@@ -60,32 +59,15 @@ int function(int input,int round_no)
 {
     int temp,temp1,i;
 
-    int expanded_input = 0;
-    for(i=0;i<24;i++)
-    {
-        temp = input && onehot(15 - expansion_arr[i]);
-        if(temp!=0)
-            expanded_input += onehot(23-i);
-    }
+    int expanded_input = expand(input);
 
-    int xored_input = expanded_input ^ keys_arr[round_no];
+    int xored_input    = expanded_input ^ keys_arr[round_no];
 
-    int sbox_input = 0;
-    for(i=0;i<4;i++)
-    {
-        temp = 0X0000003F;
-        temp1 = xored_input && temp;
-        sbox_input += (sbox_arr[temp1] << (4*i));
-        xored_input >> 6;
-    }
+    int sbox_input     = subst(xored_input);
 
-    int diffused_input = 0;
-    for(i=0;i<16;i++)
-    {
-        temp = sbox_input && onehot(15 - diffusion_arr[i]);
-        if(temp!=0)
-            diffused_input += onehot(15-i);
-    }
+    int diffused_input = perm(sbox_input);
+
+    return diffused_input;
 }
 
 // This is expand function which expands 16 bit to 24 bit.
@@ -96,7 +78,7 @@ int subst(int sub_in)
     int temp1,i;
     for(i=0;i<4;i++)
     {
-        temp1 = sub_in && temp;
+        temp1 = sub_in & temp;
         sub_out += (sbox_arr[temp1] << (4*i));
         sub_in >> 6;
     }
@@ -111,7 +93,7 @@ int expand(int exp_in)
 
     for(i=0;i<24;i++)
     {
-        temp = exp_in && onehot(15 - expansion_arr[i]);
+        temp = exp_in & onehot(16 - expansion_arr[i]);
         if(temp!=0)
             exp_out += onehot(23-i);
     }
@@ -122,15 +104,28 @@ int expand(int exp_in)
 int perm(int perm_in)
 {
     int perm_out;
-    int i,temp;
+    int i,temp,temp2;
     perm_out = 0;
     
     for(i=0;i<16;i++)
     {
-        temp = perm_in && onehot(15 - diffusion_arr[i]);
+        temp2 = onehot(16 - diffusion_arr[i]);
+        temp = perm_in & temp2;
         if(temp!=0)
             perm_out += onehot(15-i);
     }
 
     return perm_out;
+}
+
+void write(int input,FILE *ptr)
+{
+    int i,temp;
+    char c;
+    for(i=0;i<4;i++)
+    {
+        temp = input & 0xFF000000;
+        fprintf(ptr,"%c",temp>>24);
+        input = input << 8;
+    }
 }

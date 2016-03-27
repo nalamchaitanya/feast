@@ -11,6 +11,7 @@
 #define KEY_SIZE     24
 #define INPUT_SIZE   32
 
+int keys_arr[NO_OF_ROUNDS];
 // Task 1: Create the substitution box as an array i.e if you give s1[64] it
 // must give the substitution of it. Fill array with appropritate values. Use
 // s1.m function in matlab to get elements in the order s1[0],s1[1]...
@@ -36,5 +37,7 @@ void printbits(unsigned int num);
 
 int fiestel(int input);
 int function(int input,int round_no);
+
+void write(int input,FILE *ptr);
 
 #endif

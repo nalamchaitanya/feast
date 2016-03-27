@@ -11,5 +11,6 @@ int main()
 	printbits(a);
 	printbits(b);
 	printbits(c);
+	write(0x10000000,fopen("temp.txt","w"));
 	return 0;
 }

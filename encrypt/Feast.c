@@ -7,6 +7,7 @@
 // Take command line arguments of files input and output.
 // Usage: ./Feast <Input File> <Encrypted File>
 
+
 int main(int argc,char **argv)
 {
     if(argc!=3)
@@ -14,6 +15,13 @@ int main(int argc,char **argv)
         printf("Usage: ./Feast <Input File> <Encrypted File>\n");
         exit(0);
     }
+
+    keys_arr[0] = 1;
+    keys_arr[1] = 2;
+    keys_arr[2] = 3;
+    keys_arr[3] = 4;
+    keys_arr[4] = 5;
+    keys_arr[5] = 6;
 
     FILE *fileptr;
     fileptr = fopen(argv[1],"r");
@@ -31,6 +39,8 @@ int main(int argc,char **argv)
 
 	while(1)
 	{
+		input = 0;
+
 		for(i=0;i<4;i++)
 		{
 			c = fgetc(fileptr);
@@ -44,21 +54,30 @@ int main(int argc,char **argv)
 			temp1 = (int)c << (24-8*i);
 			input = input + temp1;
 		}
+//		printf("%x",input);
 		if(flag == 1 && i == 0)
 			break;
 		else if (flag == 1)
 		{
 			output = fiestel(input);
-			printf("%x\n",output);
+			write(output,filewrite);
+//			printf("%x\n",output);
 			break;
 		}
 		else
 		{
-//			printf("%x\n",input);
 			output = fiestel(input);
-			printf("%x\n",output );
+			write(output,filewrite);
+//			printf("%x\n",output );
 		}
 	}
+
+	fflush(filewrite);
+	fclose(filewrite);
+
+	fflush(fileptr);
+	fclose(fileptr);
     // Take 4 bytes at a time and convert to int and apply the encryption and
     // write into the output file. If you reach EOF then add '\0' at the end.
 }
+
