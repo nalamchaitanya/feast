@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "Encrypt.h"
 
 // Take command line arguments of files input and output.
@@ -14,18 +15,20 @@ int main(int argc,char **argv)
         exit(0);
     }
 
+    FILE *fileptr;
+    fileptr = fopen(argv[1],"r");
+
+    FILE *filewrite;
+    filewrite = fopen(argv[2],"w");
 
     int i,j,flag,output,temp1;
 	char temp;	
 
-	FILE *fileptr;
-	fileptr = fopen(argv[1],"r");
 	char c;
 	int input = 0;
 
-	FILE *filewrite;
-	filewrite = fopen(argv[2],"w");
 	flag = 0;
+
 	while(1)
 	{
 		for(i=0;i<4;i++)
@@ -55,7 +58,6 @@ int main(int argc,char **argv)
 			output = fiestel(input);
 			printf("%x\n",output );
 		}
-
 	}
     // Take 4 bytes at a time and convert to int and apply the encryption and
     // write into the output file. If you reach EOF then add '\0' at the end.

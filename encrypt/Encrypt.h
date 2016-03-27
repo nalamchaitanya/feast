@@ -15,9 +15,8 @@
 // must give the substitution of it. Fill array with appropritate values. Use
 // s1.m function in matlab to get elements in the order s1[0],s1[1]...
 
-
 // Takes a key and gives round no of keys as an array.
-void keygen(int key);
+// void keygen(int key);
 
 // This is expand function which expands 16 bit to 24 bit.
 int expand(short int half);
