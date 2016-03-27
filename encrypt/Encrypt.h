@@ -48,7 +48,7 @@ int onehot(int index);
 void printbits(int num);
 
 
-void fileread();
+void global_variables();
 void fiestel(int input);
 int function(int input,int round_no);
 

@@ -27,44 +27,22 @@ void printbits(int num)
 // Takes a key and gives round no of keys as an array.
 int* keygen(int key)
 {
-    int *keys = (int*)malloc(sizeof(int)*NO_OF_ROUNDS);
-    int i = 0;
-    char l1,l2,r1,r2;
+    keys_arr = {1,2,3,4,5,6};
 }
 
 
-void fileread()
+void global_variables()
 {
     int i,j;
     char temp;
 
-    sbox_arr = (int **)malloc(4*sizeof(int *));
-    for(i=0;i<4;i++)
-        sbox_arr[i] = (int *)malloc(16*sizeof(int));
-
+    sbox_arr        = (int *)malloc(64*sizeof(int));
     expansion_arr   = (int *)malloc(24*sizeof(int));
     diffusion_arr   = (int *)malloc(16*sizeof(int));
 
-    FILE *fileptr;
-
-    fileptr = fopen("exp.csv","r");
-    for(i=0;i<24;i++)
-        fscanf(fileptr,"%d%c",&expansion_arr[i],&temp);
-    fflush(fileptr);
-    fclose(fileptr);
-
-    fileptr = fopen("diffu.csv","r");
-    for(i=0;i<16;i++)
-        fscanf(fileptr,"%d%c",&diffusion_arr[i],&temp);
-    fflush(fileptr);
-    fclose(fileptr);
-
-    fileptr = fopen("s1.csv","r");
-    for(i=0;i<4;i++)
-        for(j=0;j<16;j++)
-            fscanf(fileptr,"%d%c",&sbox_arr[i][j],&temp);
-    fflush(fileptr);
-    fclose(fileptr);
+    expansion_arr = {15,9,13,10,4,12,6,7,6,16,15,14,8,7,5,11,1,2,5,13,1,9,4,3};
+    diffusion_arr = {2,8,11,13,3,5,10,16,4,6,9,15,1,7,12,14};
+    sbox_arr      = {14,0,4,15,13,7,1,4,2,14,15,2,11,13,8,1,3,10,10,6,6,12,12,11,5,9,9,5,0,3,7,8,4,15,1,12,14,8,8,2,13,4,6,9,2,1,11,7,15,5,12,11,9,3,7,14,3,10,10,0,5,6,0,13};
 
     return;
 }
@@ -74,10 +52,10 @@ void fiestel(int input)
     int left,right,temp;
     int out_left,out_right,output;
 
-    temp = 0x11110000;
+    temp = 0xFFFF0000;
     left = input && temp;
 
-    temp = 0x00001111;
+    temp = 0x0000FFFF;
     right = input && temp;
 
     for(i=0;i<NO_OF_ROUNDS;i++)
@@ -95,11 +73,30 @@ void fiestel(int input)
 
 int function(int input,int round_no)
 {
-    int *array;
-    array = (int *)malloc(32*sizeof(int));
+    int temp;
 
-    input = input ^ keys_arr[round_no];
+    int expanded_input = 0;
+    for(i=0;i<24;i++)
+    {
+        temp = input && onehot(15 - expansion_arr[i])
+        if(temp!=0)
+            expanded_input += onehot(23-i); 
+    }
 
-    for(i=0;i<32;i++)
+    xored_input = expanded_input ^ keys_arr[round_no];
+
+    int sbox_input = 0;
+    for(i=0;i<4;i++)
+    {
+        
         array[i] = input && onehot(31-i);
+    }
+
+    int diffused_input = 0;
+    for(i=0;i<24;i++)
+    {
+        temp = input && onehot(15 - expansion_arr[i])
+        if(temp!=0)
+            diffused_input += onehot(15-i); 
+    }
 }
