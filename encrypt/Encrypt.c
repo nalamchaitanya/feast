@@ -38,6 +38,7 @@ int fiestel(int input)
 
     temp = 0xFFFF0000;
     left = input & temp;
+    left = left >> 16;
 
     temp = 0x0000FFFF;
     right = input & temp;
@@ -51,6 +52,7 @@ int fiestel(int input)
         right = out_right;
     }
 
+    out_left = out_left << 16;
     output = out_left+out_right;
     return output;
 }

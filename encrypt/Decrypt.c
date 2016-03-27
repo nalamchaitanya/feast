@@ -55,13 +55,14 @@ int main(int argc,char **argv)
 		}
 //		printf("%x",input);
 		
-//		input = (input>>16)|(input<<16);
+		input = (input>>16)|(input<<16);
 
 		if(flag == 1 && i == 0)
 			break;
 		else if (flag == 1)
 		{
 			output = fiestel(input);
+			output = (output>>16)|(output<<16);
 			write(output,filewrite);
 //			printf("%x\n",output);
 			break;
@@ -69,6 +70,7 @@ int main(int argc,char **argv)
 		else
 		{
 			output = fiestel(input);
+			output = (output>>16)|(output<<16);
 			write(output,filewrite);
 //			printf("%x\n",output );
 		}
